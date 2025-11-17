@@ -42,7 +42,8 @@ composer require xetaio/xetaravel-counts
 
 ## 📚 Usage
 This package provides two traits:
-1️⃣ `HasBelongsToCount` — belongsTo relations
+
+### 1️⃣ `HasBelongsToCount` — belongsTo relations
 
 Used when a child belongs to a parent, and the parent stores a *_count.
 
@@ -99,7 +100,7 @@ class Article extends Model
 | Article moved to another category | decrements old, increments new |
 
 
-2️⃣ `HasBelongsToManyCounts` — belongsToMany (pivot)
+### 2️⃣ `HasBelongsToManyCounts` — belongsToMany (pivot)
 
 Used when two models are linked via a pivot and both have a *_count.
 
