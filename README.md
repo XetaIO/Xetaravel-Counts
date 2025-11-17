@@ -42,7 +42,7 @@ composer require xetaio/xetaravel-counts
 
 ## 📚 Usage
 This package provides two traits:
-1️⃣ HasRelatedCount — belongsTo relations
+1️⃣ `HasBelongsToCount` — belongsTo relations
 
 Used when a child belongs to a parent, and the parent stores a *_count.
 
@@ -71,12 +71,12 @@ class Category extends Model
 
 *Article model (child)*
 ```php
-use Xetaio\Counts\Concerns\HasRelatedCount;
+use Xetaio\Counts\Concerns\HasBelongsToCount;
 use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    use HasRelatedCount;
+    use HasBelongsToCount;
 
     protected $fillable = ['title', 'category_id'];
 
@@ -98,7 +98,7 @@ class Article extends Model
 | Article moved to another category | decrements old, increments new |
 
 
-2️⃣ HasBelongsToManyCounts — belongsToMany (pivot)
+2️⃣ `HasBelongsToManyCounts` — belongsToMany (pivot)
 
 Used when two models are linked via a pivot and both have a *_count.
 

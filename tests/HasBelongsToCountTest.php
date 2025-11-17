@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model;
-use Xetaio\Counts\Concerns\HasRelatedCount;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Xetaio\Counts\Concerns\HasBelongsToCount;
 
 class Category extends Model
 {
@@ -17,7 +18,26 @@ class Category extends Model
 
 class Article extends Model
 {
-    use HasRelatedCount;
+    use HasBelongsToCount;
+
+    protected $table = 'articles';
+
+    protected $fillable = ['title', 'category_id'];
+
+    protected static array $countedRelations = [
+        'category' => 'articles_count',
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+}
+
+class SoftDeleteArticle extends Model
+{
+    use SoftDeletes;
+    use HasBelongsToCount;
 
     protected $table = 'articles';
 
@@ -80,7 +100,7 @@ it('syncs counts when belongsTo relation changes', function () {
     expect($catA->articles_count)->toBe(1);
     expect($catB->articles_count)->toBe(0);
 
-    // On change la catégorie
+    // Change the category of the article.
     $article->update(['category_id' => $catB->id]);
 
     $catA->refresh();
@@ -88,4 +108,26 @@ it('syncs counts when belongsTo relation changes', function () {
 
     expect($catA->articles_count)->toBe(0);
     expect($catB->articles_count)->toBe(1);
+});
+
+it('restores count on parent when child is restored', function () {
+    $category = Category::create(['name' => 'Cat A']);
+
+    $article = SoftDeleteArticle::create([
+        'title'       => 'Article 1',
+        'category_id' => $category->id,
+    ]);
+
+    $category->refresh();
+    expect($category->articles_count)->toBe(1);
+
+    // soft delete
+    $article->delete();
+    $category->refresh();
+    expect($category->articles_count)->toBe(0);
+
+    // restore
+    $article->restore();
+    $category->refresh();
+    expect($category->articles_count)->toBe(1);
 });

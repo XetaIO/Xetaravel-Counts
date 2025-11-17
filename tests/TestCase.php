@@ -39,6 +39,7 @@ class TestCase extends Orchestra
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained('categories');
             $table->string('title');
+            $table->softDeletes();
             $table->timestamps();
         });
 

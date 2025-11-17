@@ -4,12 +4,15 @@ namespace Xetaio\Counts\Concerns;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-trait HasRelatedCount
+trait HasBelongsToCount
 {
-    protected static function bootHasRelatedCount(): void
+    /**
+     * Handle Model events.
+     */
+    protected static function bootHasBelongsToCount(): void
     {
         static::created(function ($model) {
-            $model->incrementRelatedCountsOnCreate();
+            $model->incrementRelatedCountsOnCreateOrRestore();
         });
 
         static::deleted(function ($model) {
@@ -19,20 +22,38 @@ trait HasRelatedCount
         static::updated(function ($model) {
             $model->syncRelatedCountsOnUpdate();
         });
+
+        // We must also handle restored event for softdelete model.
+        if (in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive(static::class), true)) {
+            static::restored(function ($model) {
+                $model->incrementRelatedCountsOnCreateOrRestore();
+            });
+        }
     }
 
+    /**
+     * Get the relations of the model.
+     *
+     * @return array
+     */
     protected static function getCountedRelations(): array
     {
         return static::$countedRelations ?? [];
     }
 
-    protected function incrementRelatedCountsOnCreate(): void
+    /**
+     * For each relation(s), increment the related parent count field.
+     */
+    protected function incrementRelatedCountsOnCreateOrRestore(): void
     {
         foreach (static::getCountedRelations() as $relation => $column) {
             $this->incrementParentCount($relation, $column);
         }
     }
 
+    /**
+     * For each relation(s), decrement the related parent count field.
+     */
     protected function decrementRelatedCountsOnDelete(): void
     {
         foreach (static::getCountedRelations() as $relation => $column) {
@@ -40,6 +61,9 @@ trait HasRelatedCount
         }
     }
 
+    /**
+     * For each relation(s), synchronize the related parent count field.
+     */
     protected function syncRelatedCountsOnUpdate(): void
     {
         foreach (static::getCountedRelations() as $relation => $column) {
