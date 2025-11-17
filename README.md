@@ -22,10 +22,10 @@ where counts must remain immediately available and consistent.
 
 - 🔹 Automatic increment/decrement on create/delete
 - 🔹 Automatic sync when foreign key changes (update)
+- 🔹 Automatic increment on restore (SoftDelete only)
 - 🔹 Automatic increment/decrement on attach/detach/sync (pivot)
 - 🔹 Zero configuration for Laravel service provider (auto-discovery)
 - 🔹 Simple traits you can reuse anywhere
-- 🔹 Fully tested with Pest + Orchestra Testbench
 - 🔹 Works on Laravel 11+
 
 ---
@@ -71,8 +71,8 @@ class Category extends Model
 
 *Article model (child)*
 ```php
-use Xetaio\Counts\Concerns\HasBelongsToCount;
 use Illuminate\Database\Eloquent\Model;
+use Xetaio\Counts\Concerns\HasBelongsToCount;
 
 class Article extends Model
 {
@@ -95,6 +95,7 @@ class Article extends Model
 | --------------------------------- | ------------------------------ |
 | Article created                   | `category.articles_count++`    |
 | Article deleted                   | `category.articles_count--`    |
+| Article restored (SofDeletes only)                  | `category.articles_count++`    |
 | Article moved to another category | decrements old, increments new |
 
 
@@ -172,3 +173,26 @@ class MaterialPart extends Pivot
 | `material->parts()->attach(part)` | updates both counts          |
 | `material->parts()->detach(part)` | decrements both              |
 | `sync([...])`                     | fully balanced automatically |
+
+---
+
+## ⚡ Performance Notes
+
+This package uses:
+
+- `increment()` / `decrement()` → atomic SQL updates
+
+- No heavy SELECT COUNT(*)
+
+- No observers per model
+
+- No risk of race conditions beyond DB atomic ops
+
+For large-scale systems, this approach is highly performant.
+
+---
+
+## 🤝 Contributing
+
+Pull Requests are welcome!
+Feel free to suggest improvements, new features, or optimizations.

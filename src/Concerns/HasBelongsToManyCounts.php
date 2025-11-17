@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 trait HasBelongsToManyCounts
 {
+    /**
+     * Handle Model events.
+     */
     protected static function bootHasBelongsToManyCounts(): void
     {
         static::created(function (Pivot $pivot) {
