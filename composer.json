@@ -1,0 +1,54 @@
+{
+  "name": "xetaio/xetaravel-counts",
+  "description": "Automatic *_count for Laravel belongsTo and belongsToMany relations.",
+  "keywords": ["laravel", "counts", "database", "eloquent", "pivot", "belongsToMany"],
+  "homepage": "https://github.com/XetaIO/Xetaravel-Counts",
+    "support": {
+        "source": "https://github.com/XetaIO/Xetaravel-Counts",
+        "issues": "https://github.com/XetaIO/Xetaravel-Counts/issues"
+    },
+  "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Xety",
+            "email": "emeric@xetaravel.com",
+            "homepage": "https://github.com/Xety"
+        }
+    ],
+  "autoload": {
+    "psr-4": {
+      "Xetaio\\Counts\\": "src/"
+    }
+  },
+  "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^11.0|^12.0",
+    "illuminate/database": "^11.0|^12.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^9.0|^10.0",
+    "pestphp/pest": "^2.0",
+    "pestphp/pest-plugin-laravel": "^2.0"
+  },
+  "scripts": {
+    "test": "pest"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Xetaio\\Counts\\CountsServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}
