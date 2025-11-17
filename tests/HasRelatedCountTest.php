@@ -39,7 +39,7 @@ it('increments count on parent when child is created', function () {
     expect($category->articles_count)->toBe(0);
 
     Article::create([
-        'title'       => 'Article 1',
+        'title' => 'Article 1',
         'category_id' => $category->id,
     ]);
 
@@ -52,7 +52,7 @@ it('decrements count on parent when child is deleted', function () {
     $category = Category::create(['name' => 'Cat A']);
 
     $article = Article::create([
-        'title'       => 'Article 1',
+        'title' => 'Article 1',
         'category_id' => $category->id,
     ]);
 
@@ -70,7 +70,7 @@ it('syncs counts when belongsTo relation changes', function () {
     $catB = Category::create(['name' => 'Cat B']);
 
     $article = Article::create([
-        'title'       => 'Article 1',
+        'title' => 'Article 1',
         'category_id' => $catA->id,
     ]);
 

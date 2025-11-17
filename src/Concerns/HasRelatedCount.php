@@ -66,7 +66,9 @@ trait HasRelatedCount
     protected function syncParentCountOnRelationChange(string $relationName, string $column): void
     {
         $relation = $this->getBelongsToRelation($relationName);
-        if (!$relation) return;
+        if (! $relation) {
+            return;
+        }
 
         $foreign = $relation->getForeignKeyName();
 
@@ -90,14 +92,18 @@ trait HasRelatedCount
     protected function getBelongsToParent(string $relationName)
     {
         $relation = $this->getBelongsToRelation($relationName);
+
         return $relation?->getResults();
     }
 
     protected function getBelongsToRelation(string $relationName): ?BelongsTo
     {
-        if (!method_exists($this, $relationName)) return null;
+        if (! method_exists($this, $relationName)) {
+            return null;
+        }
 
         $relation = $this->{$relationName}();
+
         return $relation instanceof BelongsTo ? $relation : null;
     }
 }

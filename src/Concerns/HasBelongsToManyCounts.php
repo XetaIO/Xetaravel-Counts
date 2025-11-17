@@ -56,7 +56,7 @@ trait HasBelongsToManyCounts
 
     protected function getBelongsToParent(string $relationName): ?Model
     {
-        if (!method_exists($this, $relationName)) {
+        if (! method_exists($this, $relationName)) {
             return null;
         }
 

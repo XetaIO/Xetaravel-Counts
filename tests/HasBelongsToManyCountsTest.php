@@ -40,7 +40,7 @@ class MaterialPart extends Pivot
 
     protected static array $countsConfig = [
         'material' => 'parts_count',
-        'part'     => 'materials_count',
+        'part' => 'materials_count',
     ];
 
     public function material()
@@ -58,7 +58,6 @@ it('increments counts when a relation is attached', function () {
     $material = Material::create(['name' => 'Machine A'])->refresh();
     $part = Part::create(['name' => 'Piece X'])->refresh();
 
-
     expect($material->parts_count)->toBe(0);
     expect($part->materials_count)->toBe(0);
 
@@ -73,7 +72,7 @@ it('increments counts when a relation is attached', function () {
 
 it('decrements counts when a relation is detached', function () {
     $material = Material::create(['name' => 'Machine A']);
-    $part     = Part::create(['name' => 'Piece X']);
+    $part = Part::create(['name' => 'Piece X']);
 
     $material->parts()->attach($part->id);
 
