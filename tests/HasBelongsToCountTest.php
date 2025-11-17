@@ -36,8 +36,8 @@ class Article extends Model
 
 class SoftDeleteArticle extends Model
 {
-    use SoftDeletes;
     use HasBelongsToCount;
+    use SoftDeletes;
 
     protected $table = 'articles';
 
@@ -114,7 +114,7 @@ it('restores count on parent when child is restored', function () {
     $category = Category::create(['name' => 'Cat A']);
 
     $article = SoftDeleteArticle::create([
-        'title'       => 'Article 1',
+        'title' => 'Article 1',
         'category_id' => $category->id,
     ]);
 

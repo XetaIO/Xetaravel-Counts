@@ -33,8 +33,6 @@ trait HasBelongsToCount
 
     /**
      * Get the relations of the model.
-     *
-     * @return array
      */
     protected static function getCountedRelations(): array
     {
