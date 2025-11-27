@@ -26,7 +26,7 @@ where counts must remain immediately available and consistent.
 - 🔹 Automatic increment/decrement on attach/detach/sync (pivot)
 - 🔹 Zero configuration for Laravel service provider (auto-discovery)
 - 🔹 Simple traits you can reuse anywhere
-- 🔹 Works on Laravel 11+
+- 🔹 Works on Laravel 12+
 
 ---
 
