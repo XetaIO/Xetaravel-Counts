@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Xetaio\Counts\Concerns\HasBelongsToCount;
+use Xetaio\Counts\Concerns\HasCounts;
 
 class Category extends Model
 {
@@ -18,13 +18,13 @@ class Category extends Model
 
 class Article extends Model
 {
-    use HasBelongsToCount;
+    use HasCounts;
 
     protected $table = 'articles';
 
     protected $fillable = ['title', 'category_id'];
 
-    protected static array $countedRelations = [
+    protected static array $countsConfig = [
         'category' => 'articles_count',
     ];
 
@@ -36,14 +36,14 @@ class Article extends Model
 
 class SoftDeleteArticle extends Model
 {
-    use HasBelongsToCount;
+    use HasCounts;
     use SoftDeletes;
 
     protected $table = 'articles';
 
     protected $fillable = ['title', 'category_id'];
 
-    protected static array $countedRelations = [
+    protected static array $countsConfig = [
         'category' => 'articles_count',
     ];
 

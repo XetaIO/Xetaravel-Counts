@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Xetaio\Counts\Concerns\HasBelongsToManyCounts;
+use Xetaio\Counts\Concerns\HasCounts;
 
 class Material extends Model
 {
@@ -34,7 +34,7 @@ class Part extends Model
 
 class MaterialPart extends Pivot
 {
-    use HasBelongsToManyCounts;
+    use HasCounts;
 
     protected $table = 'material_part';
 
@@ -119,7 +119,7 @@ it('handles sync calls correctly', function () {
     expect($part1->materials_count)->toBe(1);
     expect($part2->materials_count)->toBe(1);
 
-    // sync vide = tout détaché
+    // Empty sync = remove everything
     $material->parts()->sync([]);
 
     $material->refresh();

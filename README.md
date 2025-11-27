@@ -41,13 +41,12 @@ composer require xetaio/xetaravel-counts
 ---
 
 ## 📚 Usage
-This package provides two traits:
+This package provides a trait to use in your Models:
+`HasCounts` — `belongsTo` & `belongsToMany` relations
 
-### 1️⃣ `HasBelongsToCount` — belongsTo relations
+### 1️⃣ Example for `belongsTo` relations :
 
-Used when a child belongs to a parent, and the parent stores a *_count.
-
-Example
+Used when a child belongs to a parent, and the parent stores a `*_count`.
 
 You have:
 
@@ -73,15 +72,15 @@ class Category extends Model
 *Article model (child)*
 ```php
 use Illuminate\Database\Eloquent\Model;
-use Xetaio\Counts\Concerns\HasBelongsToCount;
+use Xetaio\Counts\Concerns\HasCounts;
 
 class Article extends Model
 {
-    use HasBelongsToCount;
+    use HasCounts;
 
     protected $fillable = ['title', 'category_id'];
 
-    protected static array $countedRelations = [
+    protected static array $countsConfig = [
         'category' => 'articles_count',
     ];
 
@@ -100,17 +99,17 @@ class Article extends Model
 | Article moved to another category | decrements old, increments new |
 
 
-### 2️⃣ `HasBelongsToManyCounts` — belongsToMany (pivot)
+### 2️⃣ Example for `belongsToMany` relations :
 
-Used when two models are linked via a pivot and both have a *_count.
+Used when two models are linked via a pivot table and both have a `*_count`.
 
 Example:
 
-- materials.parts_count
+- `materials.parts_count`
 
-- parts.materials_count
+- `parts.materials_count`
 
-- material_part pivot
+- `material_part` pivot  table
 
 *Material model*
 ```php
@@ -121,7 +120,7 @@ class Material extends Model
     public function parts()
     {
         return $this->belongsToMany(Part::class, 'material_part')
-            ->using(MaterialPart::class)
+            ->using(MaterialPart::class) // We need a Pivot Model
             ->withTimestamps();
     }
 }
@@ -136,7 +135,7 @@ class Part extends Model
     public function materials()
     {
         return $this->belongsToMany(Material::class, 'material_part')
-            ->using(MaterialPart::class)
+            ->using(MaterialPart::class) // We need a pivot model
             ->withTimestamps();
     }
 }
@@ -146,15 +145,18 @@ class Part extends Model
 ```php
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Xetaio\Counts\Concerns\HasBelongsToManyCounts;
+use Xetaio\Counts\Concerns\HasCounts;
 
-class MaterialPart extends Pivot
+class MaterialPart extends Pivot // Extends to Pivot
 {
-    use HasBelongsToManyCounts;
+    use HasCounts;
 
+    /**
+     * Config the counts
+     */
     protected static array $countsConfig = [
         'material' => 'parts_count',
-        'part'     => 'materials_count',
+        'part' => 'materials_count',
     ];
 
     public function material()
@@ -171,29 +173,29 @@ class MaterialPart extends Pivot
 
 | Action                            | Effect                       |
 | --------------------------------- | ---------------------------- |
-| `material->parts()->attach(part)` | updates both counts          |
-| `material->parts()->detach(part)` | decrements both              |
-| `sync([...])`                     | fully balanced automatically |
+| `material->parts()->attach(part)` | increments both counts          |
+| `material->parts()->detach(part)` | decrements both counts              |
+| `sync([...])`                     | decrements/increments both counts |
 
----
+ --
 
-## ⚡ Performance Notes
+ ## ⚡ Performance Notes
 
-This package uses:
+ This package uses:
 
-- `increment()` / `decrement()` → atomic SQL updates
+  `increment()` / `decrement()` → atomic SQL updates
 
-- No heavy SELECT COUNT(*)
+  No heavy SELECT COUNT(*)
 
-- No observers per model
+  No observers per model
 
-- No risk of race conditions beyond DB atomic ops
+  No risk of race conditions beyond DB atomic ops
 
-For large-scale systems, this approach is highly performant.
+ For large-scale systems, this approach is highly performant.
 
----
+ --
 
-## 🤝 Contributing
+ ## 🤝 Contributing
 
-Pull Requests are welcome!
-Feel free to suggest improvements, new features, or optimizations.
+ Pull Requests are welcome!
+ Feel free to suggest improvements, new features, or optimizations.

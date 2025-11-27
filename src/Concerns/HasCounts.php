@@ -4,12 +4,12 @@ namespace Xetaio\Counts\Concerns;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-trait HasBelongsToCount
+trait HasCounts
 {
     /**
      * Handle Model events.
      */
-    protected static function bootHasBelongsToCount(): void
+    protected static function bootHasCounts(): void
     {
         static::created(function ($model) {
             $model->incrementRelatedCountsOnCreateOrRestore();
@@ -34,9 +34,9 @@ trait HasBelongsToCount
     /**
      * Get the relations of the model.
      */
-    protected static function getCountedRelations(): array
+    protected static function getCountsConfig(): array
     {
-        return static::$countedRelations ?? [];
+        return static::$countsConfig ?? [];
     }
 
     /**
@@ -44,7 +44,7 @@ trait HasBelongsToCount
      */
     protected function incrementRelatedCountsOnCreateOrRestore(): void
     {
-        foreach (static::getCountedRelations() as $relation => $column) {
+        foreach (static::getCountsConfig() as $relation => $column) {
             $this->incrementParentCount($relation, $column);
         }
     }
@@ -54,7 +54,7 @@ trait HasBelongsToCount
      */
     protected function decrementRelatedCountsOnDelete(): void
     {
-        foreach (static::getCountedRelations() as $relation => $column) {
+        foreach (static::getCountsConfig() as $relation => $column) {
             $this->decrementParentCount($relation, $column);
         }
     }
@@ -64,7 +64,7 @@ trait HasBelongsToCount
      */
     protected function syncRelatedCountsOnUpdate(): void
     {
-        foreach (static::getCountedRelations() as $relation => $column) {
+        foreach (static::getCountsConfig() as $relation => $column) {
             $this->syncParentCountOnRelationChange($relation, $column);
         }
     }
